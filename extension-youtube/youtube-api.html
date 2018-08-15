@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    
+    <div id="player"></div>
+    <div id="time"></div>
+
+    <script>
+      
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId: 'M7lc1UVf-VE',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+
+      
+      function onPlayerReady(event) {
+        event.target.playVideo();
+      }
+
+      
+      
+      function onPlayerStateChange(event) {
+        if(event.target.getPlayerState()==1) { // playing
+            myTimer = setInterval(function(){ 
+                var time;
+                time = player.getCurrentTime();
+                console.log(time)
+            }, 100);
+        }
+        else { // not playing
+            clearInterval(myTimer);
+        }
+      }
+      
+    </script>
+  </body>
+</html>
+
+<!-- su khac nhau cua ham setInterval va vong lap while la:
++ ham setInterval sau mot khoang thoi gian t ms nao do, function duoc thuc hien, tuc la viec lay lai bo nho cua   mot
+  ham thuc hien xong truoc do roi la hoan toan kha thi
++ Con doi voi vong lap, thuc hien cau lenh console nhieu lan, lien tuc trong mot thoi diem va trong cung mot      ham, viec lay lai bo nho cho cac ham console.log o tren cho o duoi la khong duoc vi chung cung trong mot ham,   cho nen viec tran bo nho cua trinh duyet
+  se xay ra. -->
+
+  <!-- file test.js la file dung de so sanh voi file youtube-api nay. File test.js la cach lam sai su dung vong lap while -->
+</body>

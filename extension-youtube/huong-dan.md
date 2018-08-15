@@ -1,0 +1,2 @@
+# huong dan su dung youtube api
+Xem tai lieu huong dan su dung cac video youtube trong cac trang web bang cach su dung youtube-api theo link: [link](https://developers.google.com/youtube/iframe_api_reference#Events)
