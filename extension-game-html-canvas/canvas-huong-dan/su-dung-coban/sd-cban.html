@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Su dung co ban</title>
+</head>
+
+<body>
+    <canvas id="tutorial" width="150" height="150"></canvas>
+    <script>
+        // xac dinh doi tuong canvas
+        var canvas = document.getElementById("tutorial");
+
+        // kiem tra trinh duyet co ho tro canvas hay khog
+        if (canvas.getContext) {
+            // xac dinh ngu canh ve va tat ca cac ham duoc thao tac tren canvas. va duoc gan cho bien ctx
+            var ctx = canvas.getContext('2d');
+        } else {
+            // phan xu ly neu trinh duyet khong ho tro canvas
+        }
+
+
+    </script>
+</body>
+
+</html>
