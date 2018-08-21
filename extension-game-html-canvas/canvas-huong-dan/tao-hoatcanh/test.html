@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test</title>
+</head>
+
+<body>
+
+    <div class="h1">
+        <p class="class">Nguyen tuan anh1a</p>
+        <p class="class">Nguyen tuan anh2a</p>
+        <p class="class">Nguyen tuan anh3a</p>
+    </div>
+    <div class="h1">Nguyen tuan anh2</div>
+    <div class="h1">Nguyen tuan anh3</div>
+    <div class="h1">Nguyen tuan anh4</div>
+    <div class="h1">Nguyen tuan anh5</div>
+
+    <script>
+        var aItems = document.querySelectorAll(".h1");
+        function Sheet(aItems) {
+            if (!aItems.hasChildNodes()) {
+                return;
+            }
+            parts = Array.prototype.slice.call(aItems.childNodes);
+            // duyet cac phan tu trong mang parts
+            for (var nChild = 0; nChild < parts.length; nChild++) {
+
+                // xoa phan tu parts[nChild] trong phan tu oNode
+                aItems.removeChild(parts[nChild]);
+
+                // tuong tu nhu vay ta cung se xoa phan tu con cua thang con ta dang xet
+                parts[nChild] = new Sheet(parts[nChild]);
+
+                console.log(parts[nChild]);
+
+            }
+        }
+
+        a = [];
+        a = new Sheet(aItems[0])
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>setInterVal() - Vi du 1</title>
+    <script>
+
+        // khai bao bien tra ve cho ham chuc nang setInerVal()
+        var nIntervId;
+
+        // phuong thuc thuc hien vong lap setInerVal() sau 1000ms = 1s
+        function changeColor() {
+            nIntervId = setInterval(flashText, 1000);
+        }
+
+        // phuong thuc thuc hien doi mau chu
+        function flashText() {
+
+            // lay my_box
+            var oElem = document.getElementById('my_box');
+            // thuc hien doi mau chu: neu la mau do thi chuyen sang mau xanh, va nguoc lai
+            oElem.style.color = (oElem.style.color == 'red') ? 'blue' : 'red';
+
+        }
+
+        // phuong thuc cham dut vong lap setInerVal()
+        function stopTextColor() {
+            clearInterval(nIntervId);
+        }
+
+    </script>
+</head>
+
+<body onload="changeColor()">
+    <div id="my_box">
+        <p>Hello World</p>
+    </div>
+
+    <button onclick="stopTextColor()">Stop</button>
+</body>
+
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>setInterVal() - vi du 2: may danh chu</title>
+
+    <!-- thuc hien CSS cho trang web -->
+    <style>
+        /* CSS cho link Mozilla va cac lenh chuc nang play, pause, stop */
+        span.intLink,
+        a,
+        a:visited {
+            cursor: pointer;
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        /* CSS cho phan hien thi cua info */
+        #info {
+            width: 180px;
+            height: 150px;
+            float: right;
+            background-color: #eeeeff;
+            padding: 4px;
+            overflow: auto;
+            font-size: 12px;
+            margin: 4px;
+            border-radius: 5px;
+            /* visibility: hidden; */
+        }
+    </style>
+
+    <!-- thuc hien cac cau lenh script cho trang web -->
+    <script>
+
+        // selector la cac phan tu trong trang web duoc chon
+        function Typewriter(sSelector, nRate) {
+
+            // cac bien dung de kiem soat viec co cho thuc hien chay hay dung hay hien thi tat ca cho cac noi dung trang web
+            var bTyping = false, bStart = true;
+
+            // mang aSheets[];
+            var aSheets = [];
+
+            // chuoi dung de hien thi noi dung chi tiet
+            var sPart = "";
+
+            // tham so chua gia tri thoi gian giua cac lan lap, neu co nRate thi lay nRate, neu khong lay gia tri mac dinh la 100ms
+            this.rate = nRate || 100;
+
+            // bien luu setIntervalID
+            var nIntervId;
+
+            // function giup xoa vong lap setInterVal()
+            function clean() {
+
+            }
+
+            function scroll(oSheet, nPos, bEraseAndStop) {
+
+                
+
+            }
+
+            // phuong thuc thuc hien cac hanh dong khi setInterval chay
+            function typewrite() {
+
+                if (sPart.length === 0 && scroll(aSheets[nIdx], 0, true) && nIdx++ === aSheets.length - 1) { clean(); return; }
+
+            }
+
+            function Sheet(oNode) {
+
+                // cho ref la phan tu duoc truyen vao
+                this.ref = oNode;
+
+                // neu phan tu nay khong co chua phan tu con thi return luon
+                if (!oNode.hasChildNodes()) {
+                    return;
+                }
+
+                // lay tat ca cac phan tu con cua oNode bang cach su dung phuong thuc slice cua Array. Call dung de goi den mot phuong thuc nao do trong Array.
+                // Ham nay tra ve mot mang, cac text cung duoc coi la mot phan tu con cua oNode
+                this.parts = Array.prototype.slice.call(oNode.childNodes);
+
+                // duyet cac phan tu trong mang parts
+                for (var nChild = 0; nChild < this.parts.length; nChild++) {
+
+                    // xoa phan tu parts[nChild] trong phan tu oNode
+                    oNode.removeChild(this.parts[nChild]);
+
+                    // tuong tu nhu vay ta cung se xoa phan tu con cua thang con ta dang xet
+                    this.parts[nChild] = new Sheet(this.parts[nChild]);
+
+                }
+
+            }
+
+            // phan xu ly cho phuong thuc chay
+            this.play = function () {
+
+                // neu bStar == true thi thuc hien phuong thuc chay
+                if (bStart) {
+
+                    // lay tat cac cac phan tu duoc co class la sSelector trong trang web
+                    var aItems = document.querySelectorAll(sSelector);
+
+                    // neu trong trang web khong co phan tu co class sSelector
+                    if (aItems.length === 0) {
+                        return;
+                    }
+
+                    // duyet danh sach cac phan tu duoc chon trong mang aItems
+                    for (var nItem = 0; nItem < aItems.length; nItem++) {
+
+                        // them vao mang aSheets, ngoai ra ta thuc hien viec ban dau tat ca cac doi tuong se duoc xoa di va khong duoc hien thi
+                        aSheets.push(new Sheet(aItems[nItem]));
+
+                    }
+
+                    // sau khi hien thi cac phan tu xong thuc hien cho bStart = false;
+                    bStart = false;
+
+                }
+
+                // thuc hien ham phuong thuc setInterVal() voi tham so truyen vao la typewrite, so lan lap la this.rate
+                nIntervId = setInterval(typewrite, this.rate);
+
+                // gan bTyping = true;
+                bTyping = true;
+
+            }
+
+            // phan xu ly cho phuong thuc tam dung
+            this.pause = function () {
+
+                // xoa setInterVal() vua thiet lap trong ham play
+                clearInterval(nIntervId);
+
+                // thiet lap cho bTyping = false;
+                bTyping = false;
+
+            }
+
+            // phan xu ly cho phuong thuc hien thi tat ca noi dung cua trang web
+            this.terminate = function () {
+
+            }
+
+        }
+
+        // su dung doi tuong Typewriter
+        var oTWExample1 = new Typewriter(/* cac phan tu: */ "#article, h1, #info, #copyleft", /* ty le khung hinh (optional): */ 15);
+
+        // ty le khung hinh mac dinh la 100
+
+        var oTWExample2 = new Typewriter("#controls");
+
+        // khi trang load len thuc hien cac phuong thuc play()
+        onload = function () {
+            oTWExample1.play();
+            oTWExample2.play();
+        };
+
+    </script>
+
+</head>
+
+<body>
+
+    <!-- hien thi dong chu dau -->
+    <p id="copyleft" style="font-style: italic; font-size: 12px; text-align: center;">CopyLeft 2012 by <a href="https://developer.mozilla.org/"
+            target="_blank">Mozilla Developer Network</a></p>
+
+    <!-- cac nut chuc nang pause, play, ... -->
+    <p id="controls" style="text-align: center;">
+        <!-- &nbsp; co tac dung chen khoang trong vao vi tri co dat ky tu &nbsp -->
+        [&nbsp;
+        <span class="intLink" onclick="oTWExample1.play();">Play</span> |
+        <span class="intLink" onclick="oTWExample1.pause();">Pause</span> |
+        <span class="intLink" onclick="oTWExample1.terminate();">Terminate</span>&nbsp; ]
+    </p>
+
+    <!-- phan thong tin trong info dung de hien thi trong khung nho phia ben phai man hinh -->
+    <div id="info">
+        Vivamus blandit massa ut metus mattis in fringilla lectus imperdiet. Proin ac ante a felis ornare vehicula. Fusce pellentesque
+        lacus vitae eros convallis ut mollis magna pellentesque. Pellentesque placerat enim at lacus ultricies vitae facilisis
+        nisi fringilla. In tincidunt tincidunt tincidunt.
+    </div>
+
+    <!-- tieu de cho phan hien thi thong tin chi tiet -->
+    <h1>JavaScript Typewriter</h1>
+
+    <!-- Cac thong tin chi tiet -->
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ultrices dolor ac dolor imperdiet ullamcorper. Suspendisse
+        quam libero, luctus auctor mollis sed, malesuada condimentum magna. Quisque in ante tellus, in placerat est. Pellentesque
+        habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec a mi magna, quis mattis dolor.
+        Etiam sit amet ligula quis urna auctor imperdiet nec faucibus ante. Mauris vel consectetur dolor. Nunc eget elit
+        eget velit pulvinar fringilla consectetur aliquam purus. Curabitur convallis, justo posuere porta egestas, velit
+        erat ornare tortor, non viverra justo diam eget arcu. Phasellus adipiscing fermentum nibh ac commodo. Nam turpis
+        nunc, suscipit a hendrerit vitae, volutpat non ipsum.</p>
+
+    <!-- hien thi mot form -->
+    <form name="myForm">
+
+        <p>Phasellus ac nisl lorem:
+            <!-- them mot input -->
+            <input type="text" name="email" /><br />
+
+            <!-- them textarea -->
+            <textarea name="comment" style="width: 400px; height: 200px;">Nullam commodo suscipit lacus non aliquet. Phasellus ac nisl lorem, sed facilisis ligula. Nam cursus lobortis placerat. Sed dui nisi, elementum eu sodales ac, placerat sit amet mauris. Pellentesque dapibus tellus ut ipsum aliquam eu auctor dui vehicula. Quisque ultrices laoreet erat, at ultrices tortor sodales non. Sed venenatis luctus magna, ultricies ultricies nunc fringilla eget. Praesent scelerisque urna vitae nibh tristique varius consequat neque luctus. Integer ornare, erat a porta tempus, velit justo fermentum elit, a fermentum metus nisi eu ipsum. Vivamus eget augue vel dui viverra adipiscing congue ut massa. Praesent vitae eros erat, pulvinar laoreet magna. Maecenas vestibulum mollis nunc in posuere. Pellentesque sit amet metus a turpis lobortis tempor eu vel tortor. Cras sodales eleifend interdum.</textarea>
+        </p>
+
+        <!-- them input submit -->
+        <input type="submit" value="Send" />
+
+    </form>
+
+    <!-- Cac thong tin chi tiet con lai -->
+    <p>Duis lobortis sapien quis nisl luctus porttitor. In tempor semper libero, eu tincidunt dolor eleifend sit amet. Ut
+        nec velit in dolor tincidunt rhoncus non non diam. Morbi auctor ornare orci, non euismod felis gravida nec. Curabitur
+        elementum nisi a eros rutrum nec blandit diam placerat. Aenean tincidunt risus ut nisi consectetur cursus. Ut vitae
+        quam elit. Donec dignissim est in quam tempor consequat. Aliquam aliquam diam non felis convallis suscipit. Nulla
+        facilisi. Donec lacus risus, dignissim et fringilla et, egestas vel eros. Duis malesuada accumsan dui, at fringilla
+        mauris bibStartum quis. Cras adipiscing ultricies fermentum. Praesent bibStartum condimentum feugiat.</p>
+    <p>Nam faucibus, ligula eu fringilla pulvinar, lectus tellus iaculis nunc, vitae scelerisque metus leo non metus. Proin
+        mattis lobortis lobortis. Quisque accumsan faucibus erat, vel varius tortor ultricies ac. Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit. Sed nec libero nunc. Nullam tortor nunc, elementum a consectetur et, ultrices eu orci.
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a nisl eu sem vehicula egestas.</p>
+
+</body>
+
+</html>
