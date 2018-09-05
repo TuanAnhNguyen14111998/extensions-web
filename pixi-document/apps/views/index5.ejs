@@ -59,6 +59,31 @@
             // them sprite vao trong stage
             app.stage.addChild(cat);
 
+            // thay doi vi tri cua sprite tren khung canvas
+            cat.x = 96;
+            cat.y = 96;
+
+            // C2: thay vi dat x, y mot cach doc lap, ta cung co the su dung phuong thuc chua hai tham so x, y cung mot luc
+            cat.position.set(96, 96);
+
+            // thay doi kich thuoc theo chieu rong va cao cua sprite
+            //cat.width = 80;
+            //cat.height = 120;
+
+            // thay doi ty le, giam kich thuoc hinh anh xuong nhung khhong lam vo kich thuoc cua sprite do
+            //cat.scale.x = 0.5;
+            //cat.scale.y = 0.5;
+
+            // gap doi kich thuoc sprite nhug ko pha vo ty le cua sprite
+            //cat.scale.x = 2;
+            //cat.scale.y = 2;
+
+            // Thay doi tam xoay
+            cat.anchor.x = 0.5;
+            cat.anchor.y = 0.5;
+            // thuc hien xoay
+            cat.rotation = 0.5;
+
         }
 
     </script>

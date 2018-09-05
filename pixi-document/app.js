@@ -30,5 +30,9 @@ app.get("/index3" , function(req, res) {
 });
 
 app.get("/index4" , function(req, res) {
-    res.render('index3');
+    res.render('index4');
+});
+
+app.get("/index5" , function(req, res) {
+    res.render('index5');
 });

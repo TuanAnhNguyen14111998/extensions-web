@@ -109,3 +109,21 @@ va sau do de goi cac hinh anh da duoc chuyen dang trong TextureCache ta su dung 
 let texture = TextureCache["images/cat.png"];
 
 * file index4.ejs se thuc hien viec dat bi danh nay va thuc hien lai cong viec hien thi hinh anh len khung canvas bang cach su dung cac bi danh, day cung la file chuan co the su dung cho nhung lan code sau
+
+### Dinh vi vi tri cua sprite trong khung ve webGL
+* ta se tim hieu cach dinh vi vi tri (x, y) va thay doi kich thuoc cua cac sprite da xay dung o tren
+* xet cung vi du ve cat sprite da duoc xay dung o tren:
+* thay doi vi tri cua sprite nay:
+dat doan code nay trong function setup - hai dong code nay co the them o bat cu noi dau trong function setup, ke ca sau cau lenh app.stage.addChild(cat);
+cat.x = 96;
+cat.y = 96;
+* xem demo trong file index5.ejs
+
+
+* kich thuoc va ty le cua sprite:
+* ban co the thay doi chieu rong va chieu cao cua sprite
+* vi du, xem trong file index5.ejs
+
+* thuoc tinh scale, hay xem demo trong file index5.ejs
+
+* tuong tu ban cung co the thuc hien duoc tac vu quay sprite di mot goc bao nhieu do. Xem demo trong file index5.ejs
