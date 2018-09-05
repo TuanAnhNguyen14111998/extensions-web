@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/static/lib/pixi.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+    <title>Learn pixi.js</title>
+</head>
+
+<body>
+    <script>
+        // kiem tra xem pixi.min.js da duoc nhung vao trong file .ejs nay hay chua
+        let type = "WebGL"
+
+        if (!PIXI.utils.isWebGLSupported()) {
+            type = "canvas"
+        }
+
+        PIXI.utils.sayHello(type)
+
+        // dat cac bi danh cho cac doi tuong hay su dung trong PIXI
+        let Application = PIXI.Application,
+            loader = PIXI.loader,
+            resources = PIXI.loader.resources,
+            Sprite = PIXI.Sprite,
+            TextureCache = PIXI.utils.TextureCache,
+            Container = PIXI.Container;
+
+        let cat, state;
+
+        // tao ra mot doi tuog PIXI.Application
+        let app = new Application({
+            width: 256,
+            height: 256,
+            antialias: true,
+            transparent: false,
+            resolution: 1
+        });
+
+        // them doi tuong canvas duoc tao ra boi PIXI tren vao trong body cua DOM
+        document.body.appendChild(app.view);
+
+        // thuc hien load hinh anh va sau khi load xong thi thuc hien phuong thuc setup
+        loader
+            .add("/static/imgs/cat.png")
+            .load(setup);
+
+        // ham thuc hien chuyen doi va day hinh anh da chuyen dang sang webGL vao trong sprite
+        function setup() {
+            // day dinh dang anh da duoc chuyen doi vao sprite cat, chu y PIXI.loader.resources["duong dan cua anh"] la mot mang chua hinh anh da duoc load len ung dung
+            // phuong thuc .texture la phuong thuc chuyen doi dinh dang cua anh ve dang GPU co the xu ly
+            cat = new Sprite(resources["/static/imgs/cat.png"].texture);
+
+            // thay doi vi tri cua sprite tren khung canvas
+            cat.y = 96;
+
+            // thiet lap van toc di chuyen theo chieu ngang va doc cho sprite, ban dau cho la 0, vi sprite chua di chuyen
+            cat.vx = 0;
+            cat.vy = 0;
+
+            // them sprite vao trong stage
+            app.stage.addChild(cat);
+
+            // bien bat cac su kien nhan mui ten tren ban phim (voi doi so dau vao la ma ASCII cua 4 mui ten: len - xuong - trai - phai)
+            let left = keyboard(37),
+                up = keyboard(38),
+                right = keyboard(39),
+                down = keyboard(40);
+
+            // thuc hien di chuyen khi nhan mui ten ben trai
+            left.press = () => {
+                //thay doi vi tri cua sprite khi phim mui ten ben trai duoc nhan
+                cat.vx = -5;
+                cat.vy = 0;
+            };
+
+            // thuc hien bat su kien khong nhan vao nut mui ten ben trai
+            left.release = () => {
+                // Nếu mũi tên trái đã được thả ra, và mũi tên bên phải không xuống, và con mèo không di chuyển theo chiều dọc: Dừng con mèo
+                if (!right.isDown && cat.vy === 0) {
+                    cat.vx = 0;
+                }
+            };
+
+            //Up
+            up.press = () => {
+                cat.vy = -5;
+                cat.vx = 0;
+            };
+            up.release = () => {
+                if (!down.isDown && cat.vx === 0) {
+                    cat.vy = 0;
+                }
+            };
+
+            //Right
+            right.press = () => {
+                cat.vx = 5;
+                cat.vy = 0;
+            };
+            right.release = () => {
+                if (!left.isDown && cat.vy === 0) {
+                    cat.vx = 0;
+                }
+            };
+
+            //Down
+            down.press = () => {
+                cat.vy = 5;
+                cat.vx = 0;
+            };
+            down.release = () => {
+                if (!up.isDown && cat.vx === 0) {
+                    cat.vy = 0;
+                }
+            };
+
+
+            // thuc hien nhan trang thai cua sprite
+            state = play // play la mot ham
+
+            // thuc hien viec cap nhat toa do x cho cat sprite dan sang phai moi lan 1 pixel
+            // cap nhat 60 lan / giay
+            app.ticker.add(delta => gameLoop(delta));
+
+        }
+
+        // ham phuong thuc lap
+        function gameLoop(delta) {
+            // update trang thai hien tai cua game
+            state(delta); // state luc nay dong vai tro la ham play
+        }
+
+        function play(delta) {
+            // di chuyen sprite sang ben phai 1 pixel
+            cat.x += cat.vx;
+            cat.y += cat.vy
+        }
+
+        // phuong thuc lang nghe cac su kien nhan ban phim
+        function keyboard(keyCode) {
+            let key = {};
+            key.code = keyCode;
+            key.isDown = false;
+            key.isUp = true;
+            key.press = undefined;
+            key.release = undefined;
+            //The `downHandler`
+            key.downHandler = event => {
+                if (event.keyCode === key.code) {
+                    if (key.isUp && key.press) key.press();
+                    key.isDown = true;
+                    key.isUp = false;
+                }
+                event.preventDefault();
+            };
+
+            //The `upHandler`
+            key.upHandler = event => {
+                if (event.keyCode === key.code) {
+                    if (key.isDown && key.release) key.release();
+                    key.isDown = false;
+                    key.isUp = true;
+                }
+                event.preventDefault();
+            };
+
+            //Attach event listeners
+            window.addEventListener(
+                "keydown", key.downHandler.bind(key), false
+            );
+            window.addEventListener(
+                "keyup", key.upHandler.bind(key), false
+            );
+            return key;
+        }
+
+    </script>
+</body>
+
+</html>

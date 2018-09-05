@@ -207,3 +207,34 @@ let sprite = new Sprite(id["frameId.png"]);
 * Xem trong file index7.ejs de co the thay ro duoc dieu nay.
 * Phuong thuc randomInt la mot phuong thuc tuyet voi dung de ramdom vi tri cua cac sprite trong khung canvas ma chung ta se su dung nhieu sau nay.
 
+### Di chuyen Sprite
+* Bay gio ban da biet cach tao ra cac sprite tu nhieu nguon khac nhau. Nhung van de dat ra la lam the nao de ban co the lam cho cac sprite nay di chuyen duoc?
+* That de dang: ban se phai tao ra mot ham lap su dung Pixi.ticker. Ham lap nay duoc goi la Game Loop. Bat ky doan code nao ma ban dat ben trong ham GameLoop nay thi no se duoc cap nhat 60 lan / giay.
+* Xem demo trong index8.ejs. Ban se thay sprite cat se di chuyen dan dan sang ben phai voi moi lan di chuyen la 1 pixel
+* Chu y: doi tuong app.ticker da la mot doi tuong chuc nang cho phep thuc hien vong lap roi.
+
+* Ngoai ra, neu ban khong thich su dung doi tuong app.ticker thi ban co the su dung requestAnimationFrame cung thuc hien cap nhat vi tri sprite 60 lan / giay.
+* Viec ban chon cach nao de di chuyen sprite hoan toan phu thuoc vao quyet dinh cua ban.
+
+* Neu nhu ban muon sprite di chuyen theo huong nguoc lai thi ban chi can tru di 1 la duoc.
+
+* chu y la sprite cat phai duoc dinh nghia la let cat (bien cat ben ngoai de co the su dung duoc trong ham function gameLoop() - tranh tinh trang bien cat chi co the su dung duoc trong ham setup. Dieu nay lien quan den pham vi hoat dong cua cac bien trong bat ky chuong trinh lap trinh nao).
+
+* ban co the thuc hien viec xoay vong, di chuyen sprite theo duong thang, bat cu dieu gi ma ban muon. Ban se thay nhieu vi du de tao ra hoat canh cho sprite o nhung phan tiep theo cua tai lieu nay.
+
+### Su dung cac thuoc tinh van toc
+* de cung cap toc do di chuyen cho sprite, ban co kha nang lam cho no di chuyen nhanh hay cham.
+* Dieu nay duoc thuc hien bang cach su dung cac thuoc tinh van toc vx va vy do ban tu dinh nghia cho sprite.
+* vx thiet lap cho van toc di chuyen cua sprite theo chieu ngang
+* vy thiet lap cho van toc di chuyen cua sprite theo chieu doc
+* cac gia tri nay la cac gia tri thay the cho 1 pixel di chuyen trong vi du tren. Di chuyen nhanh tuc la di chuyen moi lan qua vx, vy pixel voi vx, vy > 1 pixel. vx, vy cang lon thi cang di chuyen nhanh va nguoc lai.
+* Ky thuat nay giup ban tao ra cac hieu ung vat ly de dang hon. Dong thoi cung ho tro cho viec code su dung ban phim va chuot de tuong tac voi sprite.
+* Xem demo trong file index9.ejs.
+
+### Trang thai cua tro choi (Game State)
+* Nhu mot van de ve chuyen mon, va de giup cho doan code cua ban duoc toi uu trong cac phan sau co the su dung lai, ta nen cau truc lai vong lap voi cac trang thai cua sprite nhu sau:
+* Xem demo trong file index10.ejs: file nay co y tuong su dung state de quan ly sprite dang chay hay la da dung.
+* viec xac dinh duoc trang thai tro choi se giup ta duoc de dang thuc hien hon trong truong hop chuyen doi canh va cap do tro choi.
+
+### Phong trao ban phim
+* xem demo trong file index11.ejs.

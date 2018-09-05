@@ -44,3 +44,19 @@ app.get("/index6" , function(req, res) {
 app.get("/index7" , function(req, res) {
     res.render('index7');
 });
+
+app.get("/index8" , function(req, res) {
+    res.render('index8');
+});
+
+app.get("/index9" , function(req, res) {
+    res.render('index9');
+});
+
+app.get("/index10" , function(req, res) {
+    res.render('index10');
+});
+
+app.get("/index11" , function(req, res) {
+    res.render('index11');
+});
