@@ -127,3 +127,20 @@ cat.y = 96;
 * thuoc tinh scale, hay xem demo trong file index5.ejs
 
 * tuong tu ban cung co the thuc hien duoc tac vu quay sprite di mot goc bao nhieu do. Xem demo trong file index5.ejs
+
+## Tao mot sprite tu mot hinh anh tileet
+* Bay gio, ban da biet cach tao mot sprite tu mot anh duy nhat. Tuy nhien voi tu cach la nha thiet ke mot tro choi, ban thuong xuyen phai tao ra cac sprites cua minh bang cach su dung cac brickets (hay con duoc goi la spritesheets).
+* PIXI co mot so cach tich hop san de giup ban lam duoc dieu nay.
+* Bricket la mot tep hinh anh chua rat nhieu cac hinh anh con co trong do.
+* Cac hinh anh con nay la hinh anh dai dien cho cac hinh anh do hoa ma ban muon su dung trong tro choi cua minh.
+* Duoi day la mot so vi du ve hinh anh brickets (hinh anh co lat gach) co chua cac nhan vat tro choi va cac doi tuong tro choi duoi dang hinh anh con duoc chua trong hinh anh brickets
+
+* hinh anh tileset.png la mot hinh anh 192 * 192 pixe. moi hinh anh con nam trong mot o co kich thuoc la 32 * 32 pixel.
+* Luu tru va truy cap tat ca do hoa duoc dung trong tro choi cua ban tren tileet la mot ky thuat xu ly rat hieu qua va quan ly bo nho rat hieu qua de lam viec voi do hoa. Va PIXI duoc toi uu hoa trong viec su dung cac ky thuat nay
+Ban co the lay ra duoc mot hinh anh con va hien thi no ra khung webGL ma ta da thuc hanh cach tao nhu trong cac phan truoc. Duoi day la mot vi du ve viec boc tach ra duoc hinh anh con la hinh anh ten lua tu hinh anh tileet va hien thi no vao trong khung webGL
+* De thuc hien dieu nay, ta phai thuc hien lan luot cac buoc sau:
+* Xem file demo trong file index6.ejs
+* b1: thuc hien load hinh anh tileset.png
+* b2: cach lam o day la ta tao mot hinh chu nhat co kich thuoc dung bang 1 o chua hinh anh con (32 * 32) va co toa do la toa do cua o chua hinh con trong hinh tileset.png.
+* b3: Yeu cau hinh anh tileset.png su dung hinh chu nhat vua tao tren, no tuong tu nhu la viec ta su dung hinh chu nhat vua tao o tren de cat hinh con ma ta mong muon => khi do ta se co mot hinh anh duoc chuyen dang chi con chua hinh anh con ma ta muon trich xuat
+* b4: Hinh anh vua duoc trich xuat dong thoi hinh anh nay cung da duoc chuyen dang, ta se day hinh anh nay vao trong strite va day thang strite nay vao trong stage de co the hien thi ra man hinh

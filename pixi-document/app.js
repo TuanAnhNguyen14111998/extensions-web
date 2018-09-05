@@ -36,3 +36,7 @@ app.get("/index4" , function(req, res) {
 app.get("/index5" , function(req, res) {
     res.render('index5');
 });
+
+app.get("/index6" , function(req, res) {
+    res.render('index6');
+});

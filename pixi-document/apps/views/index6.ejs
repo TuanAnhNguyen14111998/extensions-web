@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/static/lib/pixi.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+    <title>Learn pixi.js</title>
+</head>
+
+<body>
+    <script>
+        // kiem tra xem pixi.min.js da duoc nhung vao trong file .ejs nay hay chua
+        let type = "WebGL"
+
+        if (!PIXI.utils.isWebGLSupported()) {
+            type = "canvas"
+        }
+
+        PIXI.utils.sayHello(type)
+
+        // dat cac bi danh cho cac doi tuong hay su dung trong PIXI
+        let Application = PIXI.Application,
+            loader = PIXI.loader,
+            resources = PIXI.loader.resources,
+            Sprite = PIXI.Sprite,
+            TextureCache = PIXI.utils.TextureCache,
+            Rectangle = PIXI.Rectangle;
+
+        // tao ra mot doi tuog PIXI.Application
+        let app = new Application({
+            width: 256,
+            height: 256,
+            antialias: true,
+            transparent: false,
+            resolution: 1
+        });
+
+        // them doi tuong canvas duoc tao ra boi PIXI tren vao trong body cua DOM
+        document.body.appendChild(app.view);
+
+        // thuc hien load hinh anh va sau khi load xong thi thuc hien phuong thuc setup
+        loader
+            .add("/static/imgs/tileset.png")
+            .load(setup);
+
+        // ham thuc hien chuyen doi va day hinh anh da chuyen dang sang webGL vao trong sprite
+        function setup() {
+            // lay hinh anh tileset.png da duoc chuyen dang trong mang bo nho dem TextureCache
+            let texture = TextureCache["/static/imgs/tileset.png"];
+
+            // tao hinh chu nhat dung de cat hinh con cua ten lua, toa do (x, y) la toa do duoc tinh boi luoi hinh anh cua hinh anh tileset.png va kich thuoc cua hinh chu nhat dung de cat nay dung bang kich thuoc cua o luoi chua mot hinh con (32 * 32)
+            let rectangle = new Rectangle(96, 64, 32, 32);
+            
+            // yeu cau texture (phan da chuyen dang) su dung hinh chu nhat do: tuc la ta su dung hinh chu nhat nay de cat hinh chu nhat ten lua trong hinh anh texture da duoc chuyen dang
+            texture.frame = rectangle;
+
+            // tao ra sprite tu texture vua duoc tao o tren
+            let rocket = new Sprite(texture);
+
+            // xac dinh vi tri cua sprite tren khung canvas
+            rocket.x = 32;
+            rocket.y = 32;
+
+            // them sprite rocket vao stage
+            app.stage.addChild(rocket);
+
+            // xuat ra stage
+            app.renderer.render(app.stage);
+        }
+
+    </script>
+</body>
+
+</html>
