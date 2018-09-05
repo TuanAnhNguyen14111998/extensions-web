@@ -32,7 +32,8 @@
             resources = PIXI.loader.resources,
             Sprite = PIXI.Sprite,
             TextureCache = PIXI.utils.TextureCache,
-            Rectangle = PIXI.Rectangle;
+            Rectangle = PIXI.Rectangle,
+            Container = PIXI.Container;
 
         // tao ra mot doi tuog PIXI.Application
         let app = new Application({
@@ -53,7 +54,7 @@
 
         // ham thuc hien chuyen doi va day hinh anh da chuyen dang sang webGL vao trong sprite
         function setup() {
-            // lay hinh anh tileset.png da duoc chuyen dang trong mang bo nho dem TextureCache
+            // lay hinh anh tileset.png da duoc chuyen dang trong mang bo nho dem TextureCache, ta goi hinh anh nay trong TextureCache cung tuc la hinh anh nay cung da duoc chuyen dang roi
             let texture = TextureCache["/static/imgs/tileset.png"];
 
             // tao hinh chu nhat dung de cat hinh con cua ten lua, toa do (x, y) la toa do duoc tinh boi luoi hinh anh cua hinh anh tileset.png va kich thuoc cua hinh chu nhat dung de cat nay dung bang kich thuoc cua o luoi chua mot hinh con (32 * 32)

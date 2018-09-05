@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/static/lib/pixi.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+    <title>Learn pixi.js</title>
+</head>
+
+<body>
+    <script>
+        // kiem tra xem pixi.min.js da duoc nhung vao trong file .ejs nay hay chua
+        let type = "WebGL"
+
+        if (!PIXI.utils.isWebGLSupported()) {
+            type = "canvas"
+        }
+
+        PIXI.utils.sayHello(type)
+
+        // dat cac bi danh cho cac doi tuong hay su dung trong PIXI
+        let Application = PIXI.Application,
+            loader = PIXI.loader,
+            resources = PIXI.loader.resources,
+            Sprite = PIXI.Sprite,
+            TextureCache = PIXI.utils.TextureCache,
+            Rectangle = PIXI.Rectangle,
+            Container = PIXI.Container;
+
+        // tao ra mot doi tuog PIXI.Application
+        let app = new Application({
+            width: 800,
+            height: 600,
+            antialias: true,
+            transparent: false,
+            resolution: 1
+        });
+
+        // them doi tuong canvas duoc tao ra boi PIXI tren vao trong body cua DOM
+        document.body.appendChild(app.view);
+
+        // thuc hien load file JSON mieu ta cac hinh anh con trong hinh anh treasureHunter.png
+        loader
+            .add("/static/imgs/treasureHunter.json")
+            .load(setup);
+
+        // dinh nghia cac bien duoc su dung nhieu trong ham setup
+        let dungeon, explorer, treasure, id;
+
+        function setup() {
+            // day la 3 ky thuat de tao ra cac sprite tu ban do ket cau (file JSON)
+
+            // 1. Truy cap truc tiep vao trong TextureCache
+            let dungeonTexture = TextureCache["dungeon.png"];
+            dungeon = new Sprite(dungeonTexture);
+            app.stage.addChild(dungeon);
+
+            // 2. Truy cap ket cau bang cach su dung resources
+            explorer = new Sprite(
+                resources["/static/imgs/treasureHunter.json"].textures["explorer.png"]
+            );
+
+            // xac dinh vi tri cua hinh con
+            explorer.x = 68;
+
+            // can giua cho hinh explorer theo chieu doc
+            explorer.y = app.stage.height / 2 - explorer.height / 2;
+
+            app.stage.addChild(explorer);
+
+            // 3. Tao mot bi danh la id cho ban do khung ket cau (JSON)
+            id = PIXI.loader.resources["/static/imgs/treasureHunter.json"].textures;
+
+            // lay hinh anh hop kho bau bang bi danh id
+            treasure = new Sprite(id["treasure.png"]);
+            app.stage.addChild(treasure);
+
+            // xac dinh lai vi tri cua hop kho bau: Cho no nam ben canh phai cua khung canvas
+            treasure.x = app.stage.width - treasure.width - 48;
+            treasure.y = app.stage.height / 2 - treasure.height / 2;
+            app.stage.addChild(treasure);
+
+            // Lay hinh anh con door.png
+            door = new Sprite(id["door.png"]);
+            door.position.set(32, 0); // xac dinh vi tri cua door trong khung canvas
+            app.stage.addChild(door);
+
+            // Tao ra blob
+            let numberOfBlobs = 6, // so luong blob
+                spacing = 48, // khoang cach
+                xOffset = 150; // xac dinh trong so
+
+            // tao ra cac hinh con blob tren khung canvas voi so luong la numberOfBlobs
+            for (let i = 0; i < numberOfBlobs; i++) {
+                // tao ra mot blob
+                let blob = new Sprite(id["blob.png"]);
+
+                // cac gia tri spacing, xOffset, .. dung de xac dinh duoc vi tri cua blon duoc dat tren khung canvas
+                let x = spacing * i + xOffset;
+                let y = randomInt(0, app.stage.height - blob.height);
+                blob.x = x;
+                blob.y = y;
+
+                // them blob sprite vao trong stage
+                app.stage.addChild(blob);
+            }
+
+        }
+
+        // phuong thuc tro giup random
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+    </script>
+</body>
+
+</html>

@@ -40,3 +40,7 @@ app.get("/index5" , function(req, res) {
 app.get("/index6" , function(req, res) {
     res.render('index6');
 });
+
+app.get("/index7" , function(req, res) {
+    res.render('index7');
+});

@@ -144,3 +144,66 @@ Ban co the lay ra duoc mot hinh anh con va hien thi no ra khung webGL ma ta da t
 * b2: cach lam o day la ta tao mot hinh chu nhat co kich thuoc dung bang 1 o chua hinh anh con (32 * 32) va co toa do la toa do cua o chua hinh con trong hinh tileset.png.
 * b3: Yeu cau hinh anh tileset.png su dung hinh chu nhat vua tao tren, no tuong tu nhu la viec ta su dung hinh chu nhat vua tao o tren de cat hinh con ma ta mong muon => khi do ta se co mot hinh anh duoc chuyen dang chi con chua hinh anh con ma ta muon trich xuat
 * b4: Hinh anh vua duoc trich xuat dong thoi hinh anh nay cung da duoc chuyen dang, ta se day hinh anh nay vao trong strite va day thang strite nay vao trong stage de co the hien thi ra man hinh
+
+* Di ta phai trich xuat cac hinh anh do hoa trong bricket rat nhieu, va dong thoi de xay dung len duoc mot tro choi thi cac hinh anh con trong bricket la mot so luong rat lon cac hinh ve. Chinh vi vay, viec doc toa do thu cong cac hinh con trong bricket nhu tren se lam cho nguoi lap trinh mat rat nhieu thoi gian. Pixi co cach thuan loi hon cho ban co the lay toa do cac hinh mot cach thuan loi - Chung ta hay xem xem cach pixi lam la nhu the nao.
+
+### Su dung ban do ket cau (texture atlas)
+* Neu ban phai lam viec tren mot tro choi rat lon, viec trich xuat cac hinh anh con tren bricket se vo cung phuc tap, vi bricket luc nay se chua rat nhieu cac hinh con, va moi hinh con khong phai luc nao cung co kich thuoc giong nhau.
+* Va tap ban do ket cau (texture atlas) duoc ra doi. No thuc chat la mot tep du lieu JSON. Tep du lieu JSON nay luu tru thong tin ve vi tri va kich thuoc cac hinh anh con trong bricket.
+* Neu ban su dung tep ket cau, nhung gi ban can lam la chi can phai nho ten cua cac hinh anh con ma thoi.
+* Ban co the sap xep cac hinh anh con theo bat cu thu tu nao trong anh bricket va tep JSON se theo doi vi tri va kich thuoc cac hinh anh con cua no.
+* Dieu nay thuc su la rat thuan tien. Boi vi ta khong lay hinh anh bricket mot cach tho, va fix cung du lieu cho anh bricket, ma ta thao tac voi anh bricket thong qua tep JSON nay. Neu ta co su thay doi voi hinh anh bricket nhu them hinh anh con, xoa hinh anh con, ... thi ta chi can xuat lai tep JSON nay la duoc, va chuong trinh van chay mot cach binh thuong. Va ban se khong phai thay doi lai code cua minh.
+* Pixi tuong thich voi dinh dang ban do ket cau JSON chuan duoc xuat boi mot cong cu phan mem pho bien co ten la Texture Packer.
+* Hay tim hieu cach su dung phan mem nay de tao ra duoc cac ban do ket cau (texture atlas) va tai ban do ket cau vao trong pixi.
+
+* Cach su dung phan mem Texture Packer:
+* b1: Chuan bi mot bo suu tap cac hinh anh con rieng le ma ban muon su dung trong tro choi cua minh
+* b2: Mo Texture Packer va chon JSON Hash lam loai khung de thao tac.
+* b3: Keo hinh con cua ban vao khong gian lam viec cua Texture Packer
+* b4: Khi da hoan thanh cac buoc tren hay nhap vao nut publish (xuat ban). Dat ten tep va vi tri luu cho cac tep. Texture Packer se dua ra hai tep, mot tep la .png va mot tep dinh dang JSON. Trong truong hop nay ta dat ten la treasureHunter.
+
+* Tep JSON vua duoc tao o tren mo ta ten, kich thuoc va vi tri cua hinh anh con trong hinh anh treasureHunter.png
+* Tep JSON chua cac doi tuong hinh anh con, voi ten cua no la ten cua hinh anh con ta vua tai, dong thoi luu tru cac thuoc tinh w, h, x, y cho tung doi tuong hinh anh con.
+* Moi cau truc mo ta tung hinh anh con ma ta vua noi o tren duoc goi la khung (frames). Co du lieu nay cho nen se rat huu ich cho ban khi ban khong can phai nho vi tri va kich thuoc cua cac hinh anh con nua.
+* Tat ca nhung gi ban can phai nho do la id cac khung (id_frame). O day chung la ten cac anh ma chung ta da dat khi tai ve: vi du nhu "blob.png", ...
+* Tao hinh anh bricket bang Texture Packer thi ban khong con gap tinh trang cac hinh anh con duoc luu chong len nhau, vien hinh anh nay duoc ve de len vien cua hinh anh kia trong file bricket. Su dung Texture Packer thi cac hinh anh con se duoc luu cach nhau tu 1 cho den 2 pixel cho nen khong xay ra tinh trang chong cheo cac hinh anh con len nhau.
+
+* Bay gio, ban da biet cach tao ra mot hinh anh bricket va tep JSON mo ta cac hinh anh con co trong no. Nhiem vu tiep theo cua ban la ban phai tim cach xem tai hai doi tuong bricket va tep JSON vua tao ra vao trong code tro choi cua chung ta nhu the nao.
+
+### Tai ban do ket cau (Texture atlas - day chinh la tep JSON cua chung ta)
+* Xem demo trong file index7.ejs
+* De dua ban do ket cau (JSON) vao trong Pixi, hay tai no bang loader. Va do tep JSON nay duoc tao ra boi Texture Packer thi trinh bien dich se dien giai du lieu va tu dong tao cac ket noi tren moi khung cua tep png.
+* Day la cach tai tep .json vao trong code tro choi va sau khi nap xong tep .json thi chay ham setup
+
+loader
+  .add("images/treasureHunter.json")
+  .load(setup);
+
+
+* Moi hinh anh trong hinh anh .png dang la texture (ket cau ca nhan - da duoc chuyen dang) trong bo nho cache cua pixi. Ban co the truy cap tung texture trong cache voi tung ten hinh anh con ma ban da luu.
+
+### Tao cac sprite tu ban do ket cau da luu (tuc la tu tep JSON cua chung ta)
+* Pixi cung cap cho ta ba cach tong quat de co the tao ra mot sprite tu ban do ket cau (JSON):
+* C1: Su dung TextureCache:
+let texture = TextureCache["frameId.png"],
+    sprite = new Sprite(texture);
+* C2: Neu ban da su dung loader de tai file JSON len roi thi ban co the su dung trinh tai cua resources:
+let sprite = new Sprite(
+  resources["images/treasureHunter.json"].textures["frameId.png"]
+);
+* C3: Neu cac cach tren ban cho la cach viet code qua dai thi ban co the su dung cach thu 3 nay:
++ dat dinh danh cho file JSON da duoc chuyen dang:
+let id = PIXI.loader.resources["images/treasureHunter.json"].textures;
++ Khi do id chua tat cac cac doi tuong hinh anh con trong no, va no se la mot mang
++ Sau do, ban chi can tao ra mot sprite moi giong nhu:
+let sprite = new Sprite(id["frameId.png"]);
+
+* Trong file index7.ejs la cach ban su dung ca ba ky thuat de tai duoc ba hinh anh vao trong code tro choi cua minh
+
+* trong viec xac dinh duoc vi tri de dat cac hinh anh con vao trong khung canvas ta co su dung chieu rong va chieu cao cua stage: app.stage.height va app.stage.width
+
+* Hoc cach tao va hien thi cac sprite bang cach su dung ban do ket cau la mot trong nhung ky thuat chuan va rat quan trong.
+* Vi vay, truoc khi hoc cac ky thuat tiep theo, chung ta co the them mot vai cac sprite blob va door vao trong khung canvas. Luu y viec tao ra sprites blob la viec ta dung mot vong lap de co the tao ra nhieu sprite de co the co nhieu hinh con blob trong khung canvas.
+* Xem trong file index7.ejs de co the thay ro duoc dieu nay.
+* Phuong thuc randomInt la mot phuong thuc tuyet voi dung de ramdom vi tri cua cac sprite trong khung canvas ma chung ta se su dung nhieu sau nay.
+
