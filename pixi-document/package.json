@@ -1,0 +1,16 @@
+{
+  "name": "pixi-document",
+  "version": "1.0.0",
+  "description": "Learn pixi to create web game",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "anhtn",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3"
+  }
+}

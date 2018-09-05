@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Learn Pixi.js</title>
+    <script src="/static/lib/pixi.min.js"></script>
+</head>
+
+<body>
+    <script type="text/javascript">
+    // kiem tra xem pixi.min.js da duoc nhung vao trong file .ejs nay hay chua
+        let type = "WebGL"
+        // kiem tra xem trinh duyet co ho tro webGL hay khong
+        if (!PIXI.utils.isWebGLSupported()) {
+            type = "canvas"
+        }
+        // hien thi ra kq cua type
+        PIXI.utils.sayHello(type)
+    </script>
+</body>
+
+</html>
