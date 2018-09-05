@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/static/lib/pixi.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+    <title>Learn pixi.js</title>
+</head>
+
+<body>
+    <script>
+        // kiem tra xem pixi.min.js da duoc nhung vao trong file .ejs nay hay chua
+        let type = "WebGL"
+
+        if (!PIXI.utils.isWebGLSupported()) {
+            type = "canvas"
+        }
+
+        PIXI.utils.sayHello(type)
+
+        // tao ra mot doi tuog PIXI.Application
+        let app = new PIXI.Application({
+            width: 256,         // default: 800
+            height: 256,        // default: 600
+            antialias: true,    // default: false
+            transparent: false, // default: false
+            resolution: 1       // default: 1
+        });
+
+        // them doi tuong canvas duoc tao ra boi PIXI tren vao trong body cua DOM
+        document.body.appendChild(app.view);
+
+        // thuc hien load hinh anh va sau khi load xong thi thuc hien phuong thuc setup
+        PIXI.loader
+            .add('/static/imgs/cat.png')
+            .load(setup);
+
+        // ham thuc hien chuyen doi va day hinh anh da chuyen dang sang webGL vao trong sprite
+        function setup () {
+            // day dinh dang anh da duoc chuyen doi vao sprite cat, chu y PIXI.loader.resources["duong dan cua anh"] la mot mang chua hinh anh da duoc load len ung dung
+            // phuong thuc .texture la phuong thuc chuyen doi dinh dang cua anh ve dang GPU co the xu ly
+            let cat = new PIXI.Sprite(PIXI.loader.resources["/static/imgs/cat.png"].texture);
+
+            // them sprite vao trong stage
+            app.stage.addChild(cat);
+
+        }
+
+    </script>
+</body>
+
+</html>

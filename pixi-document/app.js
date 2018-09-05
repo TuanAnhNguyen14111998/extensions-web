@@ -24,3 +24,11 @@ app.get("/index1" , function(req, res) {
 app.get("/index2" , function(req, res) {
     res.render('index2');
 });
+
+app.get("/index3" , function(req, res) {
+    res.render('index3');
+});
+
+app.get("/index4" , function(req, res) {
+    res.render('index3');
+});

@@ -92,3 +92,20 @@
 
         * Ngoai ra ta co the thuc hien dinh dang mot luc nhieu cac hinh anh thanh dinh dang co the xu ly duoc cua GPU.
         
+* Hien thi cac sprite vua duoc day hinh anh vao trong stage: ta se su dug phuong thuc appChild cua stage de them con la sprite vao trong cha la stage
+* `app.stage.addChild(sprite);`
+* nen nho stage = { sprite }, neu khong them sprite vao trong stage thi sprite nay se khong duoc hien thi tren khung canvas
+* De ap dung nhung gi ta da hoc: tu viec load hinh anh -> chuyen dang hinh anh -> day hinh anh duoc chuyen dang vao trong mot sprite moi -> day sprite nay vao trong stage, va hien thi stage len khung canvas: xem demo trong file index3.ejs
+* Neu ban can loai bo mot sprite nao do khoi stage thi ban co the su dung phuong thuc removeChild(ten sprite);
+* Nhung thuong ta nen su dung thuoc tinh lam an/hien sprite tren stage hon la xoa han no di. Thuoc tinh do la: name_sprite.visible = false;
+
+
+* Tiep theo la ky thuat dat bi danh, do moi lan phai khai bao cac doi tuong trong PIXI de dung thi ta lai phai go rat nhieu ky tu, vi du nhu PIXI.Application, ... . Thay vao do ta se dat cac bi danh cho cac doi tuong nay, va nhung doan code sau ta chi can goi ten cac bi danh nay la xong
+
+* vi du:
+let TextureCache = PIXI.utils.TextureCache
+
+va sau do de goi cac hinh anh da duoc chuyen dang trong TextureCache ta su dung cau lenh:
+let texture = TextureCache["images/cat.png"];
+
+* file index4.ejs se thuc hien viec dat bi danh nay va thuc hien lai cong viec hien thi hinh anh len khung canvas bang cach su dung cac bi danh, day cung la file chuan co the su dung cho nhung lan code sau
