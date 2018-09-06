@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/static/lib/pixi.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0
+        }
+    </style>
+    <title>Learn pixi.js</title>
+</head>
+
+<body>
+    <script>
+        // kiem tra xem pixi.min.js da duoc nhung vao trong file .ejs nay hay chua
+        let type = "WebGL"
+
+        if (!PIXI.utils.isWebGLSupported()) {
+            type = "canvas"
+        }
+
+        PIXI.utils.sayHello(type)
+
+        // dat cac bi danh cho cac doi tuong hay su dung trong PIXI
+        let Application = PIXI.Application,
+            Container = PIXI.Container,
+            loader = PIXI.loader,
+            resources = PIXI.loader.resources,
+            Graphics = PIXI.Graphics,
+            TextureCache = PIXI.utils.TextureCache,
+            Sprite = PIXI.Sprite,
+            Text = PIXI.Text,
+            TextStyle = PIXI.TextStyle;
+        // tao ra mot doi tuog PIXI.Application
+        let app = new Application({
+            width: 800,
+            height: 600,
+            antialias: true,
+            transparent: false,
+            resolution: 1
+        });
+
+        let state, explorer, treasure, blobs, chimes, exit, player, dungeon,
+            door, healthBar, message, gameScene, gameOverScene, enemies, id;
+
+        // them doi tuong canvas duoc tao ra boi PIXI tren vao trong body cua DOM
+        document.body.appendChild(app.view);
+
+        // thuc hien load file JSON mieu ta cac hinh anh con trong hinh anh treasureHunter.png
+        loader
+            .add("/static/imgs/treasureHunter.json")
+            .load(setup);
+
+        // thao tac voi Sprite va hien thi chung ra khung canvas
+        function setup() {
+
+            // tao ra hai container:
+            // container gameScene chua cac hoat dong cua tro choi
+            gameScene = new Container();
+            app.stage.addChild(gameScene);
+
+            // tat ca nhung Sprite nhu blob, treasure, ... la nhung doi tuong hoat canh duoc them vao trong container gameScene:
+            // id la mang chua tat ca doi tuong Sprite duoc trich xuat tu treasureHunter.png
+            id = resources["/static/imgs/treasureHunter.json"].textures;
+
+            //Dungeon
+            dungeon = new Sprite(id["dungeon.png"]);
+            gameScene.addChild(dungeon);
+
+            //Door
+            door = new Sprite(id["door.png"]);
+            door.position.set(32, 0);
+            gameScene.addChild(door);
+
+            //Explorer
+            explorer = new Sprite(id["explorer.png"]);
+            explorer.x = 68;
+            explorer.y = gameScene.height / 2 - explorer.height / 2;
+            explorer.vx = 0;
+            explorer.vy = 0;
+            gameScene.addChild(explorer);
+
+            //Treasure
+            treasure = new Sprite(id["treasure.png"]);
+            treasure.x = gameScene.width - treasure.width - 48;
+            treasure.y = gameScene.height / 2 - treasure.height / 2;
+            gameScene.addChild(treasure);
+
+            // thuc hien tao 6 quai vat blob
+            let numberOfBlobs = 6, // so blob
+                spacing = 48,
+                xOffset = 150, // dich chuyen theo phuong Ox
+                speed = 2, // toc do
+                direction = 1;
+
+            // mot mang chua tat ca cac Sprite blob
+            blobs = [];
+
+            // tao ra nhieu blob tu numberOfBlobs
+            for (let i = 0; i < numberOfBlobs; i++) {
+
+                // lay blob Sprite tu treasureHunter.png
+                let blob = new Sprite(id["blob.png"]);
+
+                // tinh toa do x cho blob
+                let x = spacing * i + xOffset;
+
+                // random toa do y cho blob
+                let y = randomInt(0, app.stage.height - blob.height);
+
+                // set toa do hien thi cho blob
+                blob.x = x;
+                blob.y = y;
+
+                // them toc do di chuyen cho blob
+                blob.vy = speed * direction;
+
+                // dao nguoc huong cho blob tiep theo
+                direction *= -1;
+
+                // them blob vao trong mang blobs
+                blobs.push(blob);
+
+                // them blob vao trong gameScene
+                gameScene.addChild(blob);
+
+            }
+
+            // them thanh suc khoe: la mot container healthBar chua hai thanh do va den. Sau do container nay se duoc them vao container gameScene
+            // tao container healthBar
+            healthBar = new Container();
+            healthBar.position.set(app.stage.width - 170, 4)
+            gameScene.addChild(healthBar);
+
+            // tao ra thanh suc khoe den hcn
+            let innerBar = new Graphics();
+            innerBar.beginFill(0x000000);
+            innerBar.drawRect(0, 0, 128, 8);
+            innerBar.endFill();
+            healthBar.addChild(innerBar);
+
+            // tao ra thanh suc khoe do hcn dc dat tren thanh suc khoe den
+            let outerBar = new Graphics();
+            outerBar.beginFill(0xFF3300);
+            outerBar.drawRect(0, 0, 128, 8);
+            outerBar.endFill();
+            healthBar.addChild(outerBar);
+
+
+            // them thuoc tinh outer vao trong container healthBar: gia tri cua no tro den outerBar: thanh suc khoe mau do, dieu nay lam cho ta thuan tien trong viec truy cap thanh suc khoe mau do nay
+            healthBar.outer = outerBar;
+
+            // kiem soat do rong cua thanh suc khoe mau do
+            healthBar.outer.width = 150;
+
+            // container gameOverScene chua thong bao thang hoac thua trong tro choi
+            gameOverScene = new Container();
+            app.stage.addChild(gameOverScene);
+
+            // de bat dau tro choi, container gameOverScene khong duoc hien thi
+            gameOverScene.visible = false;
+
+            // thuc hien tao cac van ban hien thi ban da thang hoac ban da thua trong container gameOverScene:
+            // style cho doi tuong text
+            let style = new TextStyle({
+                fontFamily: "Futura",
+                fontSize: 64,
+                fill: "white"
+            });
+
+            message = new Text("The End!", style);
+            message.x = 120;
+            message.y = app.stage.height / 2 - 32;
+            gameOverScene.addChild(message);
+
+
+            // code nhan cac su kien dieu khien bang ban phim
+            //Capture the keyboard arrow keys
+            let left = keyboard(37),
+                up = keyboard(38),
+                right = keyboard(39),
+                down = keyboard(40);
+            //Left arrow key `press` method
+            left.press = function () {
+                //Change the explorer's velocity when the key is pressed
+                explorer.vx = -5;
+                explorer.vy = 0;
+            };
+            //Left arrow key `release` method
+            left.release = function () {
+                //If the left arrow has been released, and the right arrow isn't down,
+                //and the explorer isn't moving vertically:
+                //Stop the explorer
+                if (!right.isDown && explorer.vy === 0) {
+                    explorer.vx = 0;
+                }
+            };
+            //Up
+            up.press = function () {
+                explorer.vy = -5;
+                explorer.vx = 0;
+            };
+            up.release = function () {
+                if (!down.isDown && explorer.vx === 0) {
+                    explorer.vy = 0;
+                }
+            };
+            //Right
+            right.press = function () {
+                explorer.vx = 5;
+                explorer.vy = 0;
+            };
+            right.release = function () {
+                if (!left.isDown && explorer.vy === 0) {
+                    explorer.vx = 0;
+                }
+            };
+            //Down
+            down.press = function () {
+                explorer.vy = 5;
+                explorer.vx = 0;
+            };
+            down.release = function () {
+                if (!up.isDown && explorer.vx === 0) {
+                    explorer.vy = 0;
+                }
+            };
+
+
+            // gan trang thai tro choi: thuc hien ham play
+            state = play;
+
+            // khoi dong vong lap tao hoat canh cho tro choi
+            app.ticker.add(delta => gameLoop(delta));
+
+
+
+        }
+
+        // chay logic vong lap de thuc hien hoat canh cho tro choi
+        function gameLoop(delta) {
+            // lap hanh dong
+            state(delta);
+        }
+
+        // thuc hien cac logic cho moi vong lap hoat canh
+        function play(delta) {
+
+            // thuc hien di chuyen explorer - nguoi tham hiem
+            explorer.x += explorer.vx;
+            explorer.y += explorer.vy;
+
+            // kiem tra va cham cua explorer
+            let explorerHit = false;
+
+            // ham cho phep tao ra mot khung xanh la cay gioi han khong gian chuyen dong cua explorer, va kiem tra xem explorer co di qua khung gioi han hay khog de co the tra no ve dug vi tri do
+            contain(explorer, { x: 28, y: 10, width: 800, height: 500 });
+
+            // thuc hien di chuyen quai vat: thuc hien vong lap qua mang blobs
+            blobs.forEach(function (blob) {
+
+                // di chuyen quai vat
+                blob.y += blob.vy;
+
+                // ktra xem blob co di vao vien gioi han hay khong
+                let blobHitsWall = contain(blob, { x: 28, y: 10, width: 800, height: 500 });
+
+                // xu ly cac va cham tren vien gioi han: blob va cham vao vien tren hoac duoi se phai doi huong chuyen dong
+                if (blobHitsWall === "top" || blobHitsWall === "bottom") {
+                    blob.vy *= -1;
+                }
+
+                // kiem tra xem explorer co va cham vao blob hay khong
+                if (hitTestRectangle(explorer, blob)) {
+                    explorerHit = true;
+                }
+            });
+
+            if (explorerHit) {
+
+                // khi explorer va cham voi blob thi explorer se bi mo di
+                explorer.alpha = 0.5;
+
+                //giam thanh suc khoa di 1 pixel
+                healthBar.outer.width -= 1;
+
+            } else {
+
+                // Neu khong va cham thi explorer se giu nguyen mau ma khong bi mo duc
+                explorer.alpha = 1;
+
+            }
+
+            // Kiem tra xem co su va cham giua explorer va treasure (kho bau) hay khong, neu co ta se cho vi tri cua treasure o tren explorer mot chut: lam nhu vay ta se co hieu ung nhu explorer dang mang ruong kho bau
+            if (hitTestRectangle(explorer, treasure)) {
+                //If the treasure is touching the explorer, center it over the explorer
+                treasure.x = explorer.x + 8;
+                treasure.y = explorer.y + 8;
+            }
+
+            // kiem tra xem explorer co va cham voi cua thoat hiem hay khong, dieu nay se lam tro choi ket thuc
+            if (hitTestRectangle(treasure, door)) {
+                state = end;
+                message.text = "You won!";
+            }
+
+            // het suc khoe thi bi thua
+            if (healthBar.outer.width < 0) {
+                state = end;
+                message.text = "You lost!";
+            }
+
+        }
+
+        // thuc hien cac xu ly trong cuoi tro choi
+        function end() {
+            gameScene.visible = false;
+            gameOverScene.visible = true;
+        }
+
+        // cac phuong thuc bo tro cho tro choi
+
+        // ham tro giup contain co hai tham so: tham so explorer va tham so de xac dinh hinh chu nhat gioi han chuyen dong cho explorer
+        function contain(sprite, container) {
+
+            // gia tri tra ve xem explorer cham den vien ben trai - phai - tren - duoi cua khung hcn de co the tra no lai dung vi tri do, ma khong cho explorer vuot qua gioi han cua khung
+            let collision = undefined;
+
+            //Left
+            if (sprite.x < container.x) {
+                sprite.x = container.x;
+                collision = "left";
+            }
+
+            //Top
+            if (sprite.y < container.y) {
+                sprite.y = container.y;
+                collision = "top";
+            }
+
+            //Right
+            if (sprite.x + sprite.width > container.width) {
+                sprite.x = container.width - sprite.width;
+                collision = "right";
+            }
+
+            //Bottom
+            if (sprite.y + sprite.height > container.height) {
+                sprite.y = container.height - sprite.height;
+                collision = "bottom";
+            }
+
+            // tra ve gia tri collision
+            return collision;
+        }
+
+        // ham kiem tra va cham
+        function hitTestRectangle(r1, r2) {
+            //Define the variables we'll need to calculate
+            let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+            //hit will determine whether there's a collision
+            hit = false;
+            //Find the center points of each sprite
+            r1.centerX = r1.x + r1.width / 2;
+            r1.centerY = r1.y + r1.height / 2;
+            r2.centerX = r2.x + r2.width / 2;
+            r2.centerY = r2.y + r2.height / 2;
+            //Find the half-widths and half-heights of each sprite
+            r1.halfWidth = r1.width / 2;
+            r1.halfHeight = r1.height / 2;
+            r2.halfWidth = r2.width / 2;
+            r2.halfHeight = r2.height / 2;
+            //Calculate the distance vector between the sprites
+            vx = r1.centerX - r2.centerX;
+            vy = r1.centerY - r2.centerY;
+            //Figure out the combined half-widths and half-heights
+            combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+            combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+            //Check for a collision on the x axis
+            if (Math.abs(vx) < combinedHalfWidths) {
+                //A collision might be occuring. Check for a collision on the y axis
+                if (Math.abs(vy) < combinedHalfHeights) {
+                    //There's definitely a collision happening
+                    hit = true;
+                } else {
+                    //There's no collision on the y axis
+                    hit = false;
+                }
+            } else {
+                //There's no collision on the x axis
+                hit = false;
+            }
+            //`hit` will be either `true` or `false`
+            return hit;
+        };
+
+        // ham randomInt
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // ham keyboard
+        function keyboard(keyCode) {
+            var key = {};
+            key.code = keyCode;
+            key.isDown = false;
+            key.isUp = true;
+            key.press = undefined;
+            key.release = undefined;
+            //The `downHandler`
+            key.downHandler = function (event) {
+                if (event.keyCode === key.code) {
+                    if (key.isUp && key.press) key.press();
+                    key.isDown = true;
+                    key.isUp = false;
+                }
+                event.preventDefault();
+            };
+            //The `upHandler`
+            key.upHandler = function (event) {
+                if (event.keyCode === key.code) {
+                    if (key.isDown && key.release) key.release();
+                    key.isDown = false;
+                    key.isUp = true;
+                }
+                event.preventDefault();
+            };
+            //Attach event listeners
+            window.addEventListener(
+                "keydown", key.downHandler.bind(key), false
+            );
+            window.addEventListener(
+                "keyup", key.upHandler.bind(key), false
+            );
+            return key;
+        }
+
+    </script>
+</body>
+
+</html>
